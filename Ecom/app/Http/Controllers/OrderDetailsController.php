@@ -16,11 +16,15 @@ class OrderDetailsController extends Controller
     {
         $this->middleware('auth');
     }
+
+    //Show Order Details
     public function ShowOrderDetails()
     {
         $users = User::orderBy('created_at', 'desc')->with('useraddress')->paginate(10);
         return view('Order Details.ShowOrderDetails', compact('users'));
     }
+
+    //To show Details of order
     public function OrderInfo($id)
     {
         $products = Product::with('images', 'assoc')->get();

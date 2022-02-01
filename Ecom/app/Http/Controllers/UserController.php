@@ -17,11 +17,15 @@ class UserController extends Controller
     {
         $this->middleware('auth');
     }
+
+    //Add User
     public function AddUser()
     {
         $roles = Role::all();
         return view('users.AddUser', compact('roles'));
     }
+
+    //Show user
     public function ShowUser()
     {
         $users = User::orderBy('created_at', 'desc')->paginate(3);
@@ -62,6 +66,8 @@ class UserController extends Controller
             return back()->with('error', dd($ex->getMessage()));
         }
     }
+
+    //Edit user
     public function EditUser($id)
     {
         $user = User::whereId($id)->first();
@@ -94,6 +100,8 @@ class UserController extends Controller
             // Note any method of class PDOException can be called on $ex.
         }
     }
+
+    //Delete User
     public function DeleteUser(Request $req)
     {
         try {

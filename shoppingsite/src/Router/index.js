@@ -15,6 +15,10 @@ import Checkout from '../components/Checkout';
 import Wishlist from '../components/Wishlist';
 import MyOrders from '../components/MyOrders';
 import Shop from '../components/Shop';
+// import swal from 'sweetalert2'; 
+// import VueSweetalert2 from 'vue-sweetalert2';
+// import 'sweetalert2/dist/sweetalert2.min.css';
+// Vue.use(VueSweetalert2); 
 function userguard(to, from, next) {
     let authenticated = false;
     var user = localStorage.getItem('user');
@@ -29,6 +33,10 @@ function userguard(to, from, next) {
         next();
     }
     else {
+        // this.$swal('Not Authenticated!','Please login first','info');
+        // swal("Not Authenticated!! Login first!", {  
+        //     buttons: ["oh no!", "oh yes!"],  
+        //   }); 
         alert("Not Authenticated!! Login first!");
         next('/login');
     }

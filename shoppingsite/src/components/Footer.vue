@@ -138,7 +138,7 @@
           <div class="col-sm-3 col-sm-offset-1">
             <div class="single-widget">
               <h2>About Shopper</h2>
-              <form action="#" class="searchform">
+              <!-- <form action="#" class="searchform">
                 <input type="text" placeholder="Your email address" />
                 <button type="submit" class="btn btn-default">
                   <i class="fa fa-arrow-circle-o-right"></i>
@@ -147,7 +147,13 @@
                   Get the most recent updates from <br />our site and be updated
                   your self...
                 </p>
-              </form>
+              </form> -->
+              <vue-mailchimp-email-signup-form
+                :element-id="'first-email-signup-form'"
+                :url="'https://XX.us4.list-manage.com/subscribe/post?u=XXXXXXXXXXXXXX&id=XXXXXXXXXX'"
+                :title="'Subscribe to the Newsletter'"
+                :subtitle="'We take privacy seriously and we will never spam or sell your information.'"
+              />
             </div>
           </div>
         </div>
@@ -176,6 +182,7 @@
 </template>
 
 <script>
+// import "/path/to/node_modules/vue-mailchimp-email-signup-form.css";
 export default {
   name: "Footer",
 };

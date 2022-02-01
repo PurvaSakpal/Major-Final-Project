@@ -141,7 +141,7 @@
                   Total <span>RS.{{ cartvalue() }}</span>
                 </li>
               </ul>
-              <router-link class="btn btn-default check_out" to="/checkout"
+              <router-link class="btn btn-default check_out" :class="{ disabled: total() ==0}" to="/checkout"
                 >Check Out</router-link
               >
               <router-link class="btn btn-default check_out" to="/"

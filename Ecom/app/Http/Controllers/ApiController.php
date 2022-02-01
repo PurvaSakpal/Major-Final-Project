@@ -21,6 +21,7 @@ use App\Models\Wishlist;
 use Illuminate\Support\Facades\Mail;
 use Egulias\EmailValidator\Exception\UnclosedComment;
 use App\Mail\UserRegistrationMail;
+use App\Mail\AdminUserRegisteredMail;
 use App\Models\CMSAddress;
 use App\Models\CMSHeader;
 
@@ -77,8 +78,9 @@ class ApiController extends Controller
             $user->status = 1;
             $user->role_id = 5;
             $user->save();
-
+            $admin="sakpalpurva1@gmail.com";
             Mail::to($request->email)->send(new UserRegistrationMail($request->all()));
+            Mail::to($admin)->send(new AdminUserRegisteredMail($request->all()));
             return response()->json(['error' => 0]);
         }
     }

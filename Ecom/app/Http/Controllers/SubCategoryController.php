@@ -45,6 +45,8 @@ class SubCategoryController extends Controller
             }
         }
     }
+
+    //Show SubCategory
     public function ShowSubCategory()
     {
         $category = Category::all();
@@ -82,6 +84,8 @@ class SubCategoryController extends Controller
             return view('404');
         }
     }
+
+    //Delete SubCategory
     public function DeleteSubCategory(Request $req)
     {
         try {

@@ -50,6 +50,8 @@ class BannerController extends Controller
             return view('404');
         }
     }
+
+    //Show banners
     public function ShowBanner()
     {
         $banners = Banner::orderBy('created_at', 'desc')->paginate(2);

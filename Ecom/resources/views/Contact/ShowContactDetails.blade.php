@@ -1,7 +1,13 @@
 @extends('layouts.app')
 @section('content')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('#successMessage').fadeOut('fast');
+            }, 3000);
+        })
+    </script>
     <div class="container">
         <h1 class="mb-3">Contact Form Details</h1>
         @if (Session::has('success'))
@@ -30,7 +36,7 @@
                             <td>{{ $contact->subject }}</td>
                             <td>{{ $contact->message }}</td>
                             <td>
-                                <a href="javascript:void(0)" class="btn btn-primary deleteuser">Reply</a>
+                                <a href="/contact/replycontact/{{$contact->id}}" class="btn btn-primary">Reply</a>
                             </td>
                         </tr>
                     @endforeach

@@ -13,6 +13,8 @@ class CMSController extends Controller
     {
         $this->middleware('auth');
     }
+
+    //Add banner image
     public function AddBannerImage()
     {
         return view('CMS.AddBannerImage');
@@ -39,11 +41,15 @@ class CMSController extends Controller
             return view('404');
         }
     }
+
+    //Show banner image
     public function ShowBannerImage()
     {
         $banner = CMSHeader::orderBy('created_at', 'desc')->paginate(10);
         return view('CMS.ShowBannerImage', compact('banner'));
     }
+
+    //Delete banner image
     public function DeleteBannerImage(Request $req)
     {
         try {
@@ -59,6 +65,7 @@ class CMSController extends Controller
         }
     }
 
+    //Add CMS Address
     public function AddAddress()
     {
         return view('CMS.AddAddress');
@@ -94,11 +101,14 @@ class CMSController extends Controller
         }
     }
 
+    //Show CMS Address
     public function ShowAddress()
     {
         $address = CMSAddress::orderBy('created_at', 'desc')->paginate(10);
         return view('CMS.ShowAddress', compact('address'));
     }
+
+    //Delete CMS Address
     public function DeleteAddress(Request $req)
     {
         try {

@@ -11,11 +11,15 @@ class CouponController extends Controller
     {
         $this->middleware('auth');
     }
+
+    //Show Coupons
     public function ShowCoupons()
     {
         $coupons = Coupon::orderBy('created_at', 'desc')->paginate(10);
         return view('Coupons.ShowCoupons', compact('coupons'));
     }
+
+    //Add Coupons
     public function AddCoupon()
     {
         return view('Coupons.AddCoupon');
@@ -42,6 +46,8 @@ class CouponController extends Controller
             return view('404');
         }
     }
+
+    //Edit coupons
     public function EditCoupon($id)
     {
         $coupon = Coupon::find($id);
@@ -69,6 +75,8 @@ class CouponController extends Controller
             return view('404');
         }
     }
+
+    //Delete Coupon
     public function DeleteCoupon(Request $req)
     {
         try {

@@ -135,17 +135,17 @@
                       >Only 10 digits allowed</span
                     >
                   </div>
-                  <button type="submit" class="btn btn-primary">
+                  <!-- <button type="submit" class="btn btn-primary">
                     Place Order
-                  </button>
+                  </button> -->
                 </form>
               </div>
-              <div class="col-sm-10">
+              <!-- <div class="col-sm-10">
                 <div v-if="loading" class="spiner-border spiner-border-sm">
                   <h2 style="color:green"><i class="fa fa-spiner"></i>Processing...Please wait</h2>
                   <p style="color:red">Do not refresh!!</p>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="col-sm-4">
@@ -240,6 +240,42 @@
           </tbody>
         </table>
       </div>
+      <div class="step-one">
+        <h2 class="heading">Step2</h2>
+      </div>
+      <div class="payment-options">
+        <span>
+          <label><input type="checkbox" /> Cash on Delivery</label>
+        </span>
+        <span id="ccheck">
+          <label
+            ><input type="checkbox" v-model="check" @click="paymentPay()" />
+            Paypal Payment</label
+          >
+          <div v-if="check == true">
+            <Paypal />
+          </div>
+        </span>
+        <div class="shopper-informations">
+          <div class="row">
+            <div class="col-sm-10">
+              <div v-if="loading" class="spiner-border spiner-border-sm">
+                <h2 style="color: green">
+                  <i class="fa fa-spiner"></i>Processing...Please wait
+                </h2>
+                <p style="color: red">Do not refresh!!</p>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <form @submit.prevent="placeorder">
+                <button class="btn btn-default check_out" type="submit">
+                  Place Order
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
   <!--/#cart_items-->
@@ -247,6 +283,7 @@
 
 <script>
 import { orderplaced } from "@/Common/Service";
+import Paypal from "../components/Paypal.vue";
 import {
   email,
   required,
@@ -255,8 +292,13 @@ import {
 } from "vuelidate/lib/validators";
 export default {
   name: "Checkout",
+  components: {
+    Paypal,
+  },
   data() {
     return {
+      el: "#ccheck",
+      check: false,
       loading: false,
       cart: [],
       user: null,
@@ -354,6 +396,7 @@ export default {
       }
       let couponapp = localStorage.getItem("coupon");
       var cartval = this.total() + this.shipping - couponapp;
+      localStorage.setItem("cartvalue", cartval);
       return cartval;
     },
     couponApp() {

@@ -33,15 +33,8 @@
                                 </td>
                             </tr>
                         @endforeach
-                    @else
-                        @php
-                            $count = 'There is no data';
-                        @endphp
                     @endif
                 @endforeach
-                <tr>
-                    <td colspan="6" class="text-center">{{ $count }}</td>
-                </tr>
             </tbody>
         </table>
 

@@ -10,17 +10,17 @@
             :height="250"
           />
           <h2>RS.{{ price }}</h2>
-          <p>{{ name }}</p>
+          <p>{{ pname }}</p>
           <button
             class="btn btn-default add-to-cart"
-            @click="addToCart(id, name, image, price, description)"
+            @click="addToCart(id, pname, image, price, description)"
           >
             <i class="fa fa-shopping-cart"></i>Add to cart
           </button>
         </div>
         <div class="product-overlay">
           <div class="overlay-content">
-            <h2>{{ name }}</h2>
+            <h2>{{ pname }}</h2>
             <p>RS.{{ price }}</p>
             <button
               class="btn btn-default add-to-cart"

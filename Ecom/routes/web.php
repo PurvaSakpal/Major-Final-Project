@@ -92,6 +92,8 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
 
     //Contact Us Routes
     Route::get('/contact/showcontactdetails', [ContactController::class, 'ShowContactDetails'])->name('show.contact.details');
+    Route::get('/contact/replycontact/{id}',[ContactController::class,'ReplyContact'])->name('reply.contact');
+    Route::post('/contact/sendreplytocontact',[ContactController::class,'SendReplyToContact'])->name('send.reply');
 
     //Add CMS Banner Image
     Route::get('/cms/addbannerimage', [CMSController::class, 'AddBannerImage']);
