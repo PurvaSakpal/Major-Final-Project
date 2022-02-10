@@ -15,7 +15,7 @@
                             bid: bid
                         },
                         success: function(response) {
-                            window.location.href = "/cms/showbannerimage";
+                            window.location.reload();
                         },
                         error: function(xhr) {
                             console.log(xhr.responseText);
@@ -41,7 +41,7 @@
         @if (Session::has('success'))
             <div class="alert alert-success" id="successMessage">{{ Session::get('success') }}</div>
         @endif
-        <table class="table table-striped">
+        <table class="table table-striped" id="example1">
             <thead>
                 <tr>
                     <th scope="col">Image</th>

@@ -40,7 +40,18 @@ class ContactController extends Controller
             $reply->email = $req->to;
             $reply->message = $req->msg;
             $reply->save();
-            Mail::to($req->to)->send(new SendReplyToContact($req->all()));
+            ContactUs::whereId($req->cid)->update([
+                'status'=> 1
+            ]);
+            // Mail::to($req->to)->send(new SendReplyToContact($req->all()));
+            $data = ['name' => $req->name,'msg'=>$req->msg];
+                $user['to'] = $req->to;
+
+                Mail::send('Mail.SendReply',$data,function($message) use ($user){
+                $message->to($user['to']);
+                $message->subject('Reply');
+                });
+
             return redirect('/contact/showcontactdetails')->withSuccess('Reply sent successfully');
         }
     }

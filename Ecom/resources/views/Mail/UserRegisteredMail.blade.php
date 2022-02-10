@@ -1,4 +1,4 @@
-Dear {{ $name }},
+Dear {{ $fname }} {{$lname}},
 
 <p>You have been registered successfully</p>
 <p>Your login credentials are as mentioned below</p>

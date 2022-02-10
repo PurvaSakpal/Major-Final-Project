@@ -359,6 +359,7 @@ export default {
           total: total,
           cart_sub_total: cart_sub_total,
           shipping_cost: this.shipping,
+          status:"PENDING",
           coupon_id: this.couponid,
         };
         console.log(formData);

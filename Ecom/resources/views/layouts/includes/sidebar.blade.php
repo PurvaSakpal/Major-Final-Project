@@ -52,7 +52,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/banner/showbanner" class="nav-link {{ request()->is('*banner*') ? 'active' : '' }}">
+                    <a href="/banner/showbanner" class="nav-link {{ request()->is('*showbanner*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-copy"></i>
                         <p>
                             Banner
@@ -118,13 +118,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="/cms/showbannerimage" class="nav-link">
+                            <a href="/cms/cmsbannerimage" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Banner Image</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/cms/showaddress" class="nav-link">
+                            <a href="/cms/cmsshowaddress" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Address</p>
                             </a>
@@ -136,6 +136,14 @@
                         <i class="nav-icon fas fa-chart-pie"></i>
                         <p>
                             Order Detail
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/settings/showsetting" class="nav-link {{ request()->is('*settings*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <p>
+                            Setting
                         </p>
                     </a>
                 </li>

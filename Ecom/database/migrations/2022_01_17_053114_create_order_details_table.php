@@ -20,8 +20,9 @@ class CreateOrderDetailsTable extends Migration
             $table->float('cart_sub_total');
             $table->float('shipping_cost');
             $table->float('total');
+            $table->string('status');
             $table->unsignedBigInteger('coupon_id');
-            $table->foreign('coupon_id')->references('id')->on('coupons_useds')->onDelete('cascade')->onUpdate('cascade')->nullable();
+            $table->foreign('coupon_id')->references('id')->on('coupons')->onDelete('cascade')->onUpdate('cascade')->nullable();
             $table->unsignedBigInteger('user_address_id');
             $table->foreign('user_address_id')->references('id')->on('user_addresses')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

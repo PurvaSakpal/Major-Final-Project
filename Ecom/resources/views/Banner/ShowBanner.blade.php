@@ -9,13 +9,13 @@
                 if (confirm("Delete Banner?")) {
                     $.ajax({
                         url: "{{ url('/banner/deletebanner') }}",
-                        method: 'patch',
+                        method: 'post',
                         data: {
                             _token: '{{ csrf_token() }}',
                             bid: bid
                         },
                         success: function(response) {
-                            window.location.href = "/banner/showbanner";
+                            window.location.reload();
                         },
                         error: function(xhr) {
                             console.log(xhr.responseText);
@@ -26,6 +26,29 @@
             setTimeout(function() {
                 $('#successMessage').fadeOut('fast');
             }, 3000);
+            $('#example1').DataTable({
+                "bPaginate": false,
+                "bInfo": false,
+                "responsive": false,
+                "lengthChange": false,
+                "autoWidth": false,
+                dom: 'Blfrtip',
+                buttons: [{
+                        extend: 'csv',
+                        title: 'Banner PDF',
+                        exportOptions: {
+                            columns: [0,1, 2, 3]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'Banner PDF',
+                        exportOptions: {
+                            columns: [0,1, 2, 3]
+                        }
+                    }
+                ]
+            });
         })
     </script>
     <div class="container">
@@ -41,7 +64,7 @@
         @if (Session::has('success'))
             <div class="alert alert-success" id="successMessage">{{ Session::get('success') }}</div>
         @endif
-        <table class="table table-striped">
+        <table class="table table-striped" id="example1">
             <thead>
                 <tr>
                     <th scope="col">Sr No.</th>

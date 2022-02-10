@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SubCategory;
 use App\Models\Category;
+use App\Models\Product;
 
 class SubCategoryController extends Controller
 {
@@ -41,7 +42,7 @@ class SubCategoryController extends Controller
                     return back()->with('error', "Error while adding");
                 }
             } catch (\Illuminate\Database\QueryException $ex) {
-                return view('404');
+                return redirect('/error')->with('error', $ex->getMessage());
             }
         }
     }
@@ -81,7 +82,7 @@ class SubCategoryController extends Controller
                 return back()->with('error', "Something went wrong");
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -89,10 +90,15 @@ class SubCategoryController extends Controller
     public function DeleteSubCategory(Request $req)
     {
         try {
-            SubCategory::whereId($req->cid)->delete();
-            return back()->with('success', "Deleted Successfully");
+            $subcat = SubCategory::whereId($req->scid)->first();
+            if ($subcat->delete()) {
+                return back()->with('success', "Deleted Succcessfully");
+            } else {
+                return back()->with('error', "Error while deleting category");
+            }
+            // return back()->with('success', "Deleted Successfully");
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 }

@@ -25,6 +25,7 @@ class ProductController extends Controller
     }
     public function PostAddProduct(Request $req)
     {
+        try{
         $validate = $req->validate([
             'name' => ['required', 'min:3','unique:products'],
             'subcat' => ['required'],
@@ -46,7 +47,8 @@ class ProductController extends Controller
             $product->price = $price;
             $product->quantity = $quantity;
             $product->description = $description;
-            if ($product->save()) {
+            $subcateg=SubCategory::whereId($subcat)->first();
+            if ($subcateg->products()->save($product)) {
                 $prod = Product::latest()->first();
                 $subcat = SubCategory::whereId($subcat)->first();
                 $cat_id = $subcat->category_id;
@@ -84,6 +86,10 @@ class ProductController extends Controller
             }
         }
     }
+    catch (\Illuminate\Database\QueryException $ex) {
+        return redirect('/error')->with('error', $ex->getMessage());
+    }
+    }
 
     //edit Product
     public function EditProduct($id)
@@ -96,7 +102,7 @@ class ProductController extends Controller
     //Edit Post Product
     public function PostEditProduct(Request $req)
     {
-        // try{
+         try{
         $validate = $req->validate([
             'name' => ['required', 'string', 'min:2','unique:products,name,'.$req->name],
             'subcat' => ['required'],
@@ -155,10 +161,10 @@ class ProductController extends Controller
         }
 
         return redirect('/products/showproducts')->with('success', "Product updated successfully");
-        // }
-        // catch (\Illuminate\Database\QueryException $ex) {
-        //     return view('404');
-        // }
+        }
+        catch (\Illuminate\Database\QueryException $ex) {
+            return redirect('/error')->with('error', $ex->getMessage());
+        }
     }
 
     //Show Products
@@ -183,17 +189,17 @@ class ProductController extends Controller
     {
         try {
             $product = Product::whereId($req->pid)->first();
-            foreach ($product->images as $image) :
+            // foreach ($product->images as $image) :
 
-                $path = public_path('ProductImages/' . $image->image);
-                if (File::exists($path)) {
-                    unlink($path);
-                }
-            endforeach;
+            //     $path = public_path('ProductImages/' . $image->image);
+            //     if (File::exists($path)) {
+            //         unlink($path);
+            //     }
+            // endforeach;
             $product->delete();
             return back()->withSuccess('Product deleted successffully');
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 }

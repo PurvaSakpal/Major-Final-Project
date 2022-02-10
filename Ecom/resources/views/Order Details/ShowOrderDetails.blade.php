@@ -1,12 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#example1').DataTable({
+            "bPaginate": false,
+                "bInfo": false,
+            "responsive": false,
+            "lengthChange": false,
+            "autoWidth": false,
+            dom: 'Blfrtip',
+            buttons: [{
+                    extend: 'csv',
+                    title: 'Orders List PDF',
+                    exportOptions: {
+                        columns: [0,1, 2, 3, 4]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Orders List PDF',
+                    exportOptions: {
+                        columns: [0,1, 2, 3, 4]
+                    }
+                }
+            ]
+        });
+    })
+</script>
     <div class="container">
         <h1>Orders Placed Details Here</h1>
         @if (Session::has('success'))
             <div class="alert alert-success">{{ Session::get('success') }}</div>
         @endif
-        <table class="table table-striped" id="mytable">
+        <table class="table table-striped" id="example1">
             <thead>
                 <tr>
                     <th scope="col">Sr No.</th>
@@ -18,10 +46,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($users as $user)
-                    @if (!empty($user->useraddress) && $user->useraddress->count())
-                        @foreach ($user->useraddress as $useradd)
-
+                {{-- @foreach ($users as $user) --}}
+                    @if (!empty($useraddress) && $useraddress->count())
+                        @foreach ($useraddress as $useradd)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $useradd->email }}</td>
@@ -33,14 +60,18 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @else
+                        <tr>
+                            <td colspan="6" class="text-center">There is no data.</td>
+                        </tr>
                     @endif
-                @endforeach
+                {{-- @endforeach --}}
             </tbody>
         </table>
 
     </div>
     <div>
-        {{ $users->links() }}
+        {{ $useraddress->links() }}
     </div>
     </div>
     <style>

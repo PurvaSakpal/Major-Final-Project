@@ -1,8 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+       $(document).ready(function() {
+        $("#example1").DataTable({
+            "bPaginate": false,
+                "bInfo": false,
+        "responsive": false, "lengthChange": false,
+        "buttons": [ "csv", "pdf"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        })
+    </script>
     <div class="container">
-        <div class="float-left my-3">
+        <div class="float-left my-3 mx-3">
             <a href="{{ route('show.products') }}" class="btn btn-warning float-right" role="button">Back</a>
         </div>
         <div>
@@ -13,6 +24,12 @@
             @endif
 
             <table class="table" id="example1">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Product Details</th>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr>
                         <th>Product Name</th>
@@ -67,20 +84,9 @@
                     </tr>
                 </tbody>
             </table>
-
         </div>
     </div>
     </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(function() {
-            $("#example1").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        });
-    </script>
+
 @endsection

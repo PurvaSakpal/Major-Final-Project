@@ -26,6 +26,29 @@
             setTimeout(function() {
                 $('#successMessage').fadeOut('fast');
             }, 3000);
+            $('#example1').DataTable({
+                "bPaginate": false,
+                "bInfo": false,
+                "responsive": false,
+                "lengthChange": false,
+                "autoWidth": false,
+                dom: 'Blfrtip',
+                buttons: [{
+                        extend: 'csv',
+                        title: 'Products List PDF',
+                        exportOptions: {
+                            columns: [0,1, 2, 3, 4,5]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'Products List PDF',
+                        exportOptions: {
+                            columns: [0,1, 2, 3, 4,5]
+                        }
+                    }
+                ]
+            });
         })
     </script>
     <div class="container">
@@ -44,7 +67,7 @@
         @if (Session::has('errors'))
             <div class="alert alert-success">{{ Session::get('errors') }}</div>
         @endif
-        <table class="table table-striped" id="mytable">
+        <table class="table table-striped" id="example1">
             <thead>
                 <tr>
                     <th scope="col">Sr No.</th>

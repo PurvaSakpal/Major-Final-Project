@@ -33,7 +33,7 @@ class CategoryController extends Controller
                 return redirect('/category/showcategory')->with('success', "Category Added Successfully");
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -70,7 +70,7 @@ class CategoryController extends Controller
                 return redirect('/category/showcategory')->with('success', "Successfully updated");
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -85,7 +85,7 @@ class CategoryController extends Controller
                 return back()->with('error', "Error while deleting category");
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 }

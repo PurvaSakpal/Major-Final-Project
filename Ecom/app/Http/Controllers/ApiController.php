@@ -20,10 +20,10 @@ use App\Models\UserOrder;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\Mail;
 use Egulias\EmailValidator\Exception\UnclosedComment;
-use App\Mail\UserRegistrationMail;
-use App\Mail\AdminUserRegisteredMail;
 use App\Models\CMSAddress;
 use App\Models\CMSHeader;
+use App\Models\Setting;
+use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
@@ -34,14 +34,8 @@ class ApiController extends Controller
     }
     public function Login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
-            'password' => 'required|string'
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
-        } else {
-            if (!$token = auth()->guard('api')->attempt($validator->validated())) {
+     try{
+            if (!$token = auth()->guard('api')) {
                 return response()->json(['err' => 1, 'msg' => 'Credentials does not match']);
             } else {
 
@@ -55,21 +49,15 @@ class ApiController extends Controller
                 ]);
             }
         }
+        catch(\Exception $ex){
+            return response()->json(['err'=>1,'msg'=>'Something went wrong!!']);
+        }
     }
 
 
     public function Register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'firstname' => 'required', 'string', 'max:255',
-            'lastname' => 'required', 'string', 'max:255',
-            'email' => 'required', 'string', 'unique:users',
-            'password' => 'required', 'string', 'min:6', 'confirmed',
-            'confirmpassword' => 'required'
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['err' => $validator->errors()]);
-        } else {
+        try{
             $user = new User();
             $user->first_name = $request->firstname;
             $user->last_name = $request->lastname;
@@ -79,31 +67,47 @@ class ApiController extends Controller
             $user->role_id = 5;
             $user->save();
             $admin="sakpalpurva1@gmail.com";
-            Mail::to($request->email)->send(new UserRegistrationMail($request->all()));
-            Mail::to($admin)->send(new AdminUserRegisteredMail($request->all()));
-            return response()->json(['error' => 0]);
+            $data = ['fname' => $request->firstname,'lname' => $request->lastname,'email' => $request->email,'password' => $request->password];
+                $user['to'] = $request->email;
+
+                Mail::send('Mail.UserRegisteredMail',$data,function($message) use ($user){
+                $message->to($user['to']);
+                $message->subject('Registration Confirmed !');
+                });
+
+                $settings=Setting::first();
+                if($settings->register == 1){
+                    Mail::send('Mail.AdminUserRegisteredMail',$data,function($message) use ($admin){
+                        $message->to($admin);
+                        $message->subject('New User Registered !');
+                    });
+                }
+            return response()->json(['error' => 0,'msg'=>'User registered successfully']);
+        }
+        catch(\Illuminate\Database\QueryException $ex){
+            if($ex->errorInfo[1]==1062){
+                return response()->json(['error'=>1,'msg'=>'Email alredy exists!!']);
+            }
+            else{
+                return response()->json(['error'=>1,'msg'=>'Something went wrong!']);
+            }
         }
     }
 
     //Contact Us API
     public function ContactUs(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required', 'string', 'max:255',
-            'email' => 'required', 'string', 'unique:users',
-            'subject' => 'required', 'string', 'min:2',
-            'message' => 'required', 'min:3',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
-        } else {
+        try {
             $contact = new ContactUs();
             $contact->name = $request->name;
             $contact->emai = $request->email;
             $contact->subject = $request->subject;
             $contact->message = $request->message;
+            $contact->status= 0;
             $contact->save();
             return response()->json(['error' => 0]);
+        }catch(\Exception $ex){
+            return response()->json(['err'=>1,'msg'=>'Something went wrong']);
         }
     }
 
@@ -137,21 +141,11 @@ class ApiController extends Controller
         $products = Product::where('sub_category_id', $id)->with('images', 'assoc')->get();
         return response()->json(['products' => $products]);
     }
-    // public function GetCategory($id){
-    //     $catproducts=Product::with('subcategory')->all();
-    //     $product=
-    //     return response()->json(['catproducts'=>$catproducts]);
-    // }
+
+    //Change Password
     public function ChangePassword(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'oldpass' => 'required',
-            'newpass' => 'required', 'min:6',
-            'confirmpass' => 'required', 'min:6',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
-        } else {
+       try {
             $user = User::whereId($request->id)->first();
             if (Hash::check($request->oldpass, $user->password)) {
                 $user->update([
@@ -161,6 +155,9 @@ class ApiController extends Controller
             } else {
                 return response()->json(['err' => "Old password is wrong"]);
             }
+        }catch(\Exception $ex)
+        {
+            return response()->json(['err'=>1,'msg'=>'Something went wrong!']);
         }
     }
 
@@ -184,14 +181,19 @@ class ApiController extends Controller
             return response()->json(['err' => 'Error while registering']);
         }
     }
+
+    //To show coupons
     public function Coupons()
     {
         $coupons = Coupon::all();
         return response()->json(['coupons' => $coupons]);
     }
+
+    //To apply coupon
     public function ApplyCoupon(Request $req)
     {
-        $coupon = Coupon::where('code', $req->code)->where('cart_value', '<=', $req->carttotal)->first();
+        try{
+            $coupon = Coupon::where('code', $req->code)->where('cart_value', '<=', $req->carttotal)->first();
         if (!$coupon) {
             return response()->json(['err' => "Invalid coupon"]);
         } else {
@@ -199,40 +201,56 @@ class ApiController extends Controller
             $couponid = $coupon->id;
             return response()->json(['success' => "Coupon applied sucessfully", 'cvalue' => $couponvalue, 'couponid' => $couponid, 'err' => 0]);
         }
-    }
-    public function AddToWishlist(Request $req)
-    {
-        $wishlist = new Wishlist();
-        $wishlist->user_id = $req->user;
-        $wishlist->product_id = $req->pid;
-        $wishlist->product_name = $req->pname;
-        $wishlist->product_price = $req->price;
-        $wishlist->product_image = $req->image;
-        $wishlist->product_description = $req->description;
-        if ($wishlist->save()) {
-            return response()->json(['err' => 0, 'msg' => 'Added to wishlist!!!']);
-        } else {
-            return response()->json(['err' => 1, 'msg' => 'Error']);
+        }catch(\Exception $ex){
+            return response()->json(['err'=>1,'msg'=>'Something went wrong']);
         }
     }
 
+    //To Add to wishlist
+    public function AddToWishlist(Request $req)
+    {
+        try{
+            $wishlist = new Wishlist();
+            $wishlist->user_id = $req->user;
+            $wishlist->product_id = $req->pid;
+            $wishlist->product_name = $req->pname;
+            $wishlist->product_price = $req->price;
+            $wishlist->product_image = $req->image;
+            $wishlist->product_description = $req->description;
+            $wishlist->save();
+            return response()->json(['err' => 0, 'msg' => 'Added to wishlist!!!']);
+
+        }catch(\Exception $ex)
+        {
+            return response()->json(['err' => 1, 'msg' => 'Something went wrong!']);
+        }
+
+    }
+
+    //To show user's wishlist
     public function WishlistProduct($id)
     {
         $products = Wishlist::where('user_id', $id)->get();
         return response()->json(['products' => $products]);
     }
+
+    //To delete wishlist item
     public function DeleteItem(Request $req)
     {
-        if (Wishlist::whereId($req->pid)->delete()) {
-            return response()->json(['err' => 0]);
-        } else {
-            return response()->json(['err' => 1, 'msg' => "not able to delete"]);
+        try {
+            Wishlist::whereId($req->pid)->delete();
+            return response()->json(['err' => 0, 'msg' => "Deleted sucessfully"]);
+        }
+        catch(\Exception $ex)
+        {
+            return response()->json(['err' => 1, 'msg' => "Something went wrong!"]);
         }
     }
 
     //PlaceOrder
     public function PlaceOrder(Request $req)
     {
+        DB::beginTransaction();
         try {
             $email = $req->email;
             $firstname = $req->firstname;
@@ -247,6 +265,7 @@ class ApiController extends Controller
             $cart_sub_total = $req->cart_sub_total;
             $shipping_cost = $req->shipping_cost;
             $total = $req->total;
+            $status=$req->status;
             $carts = $req->cart;
 
             $user = User::whereId($user_id)->first();
@@ -269,7 +288,7 @@ class ApiController extends Controller
             $orderdetail->cart_sub_total = $cart_sub_total;
             $orderdetail->shipping_cost = $shipping_cost;
             $orderdetail->total = $total;
-            // $orderdetail->coupon_id = $coup->id;
+            $orderdetail->status=$status;
             if ($req->coupon_id) {
                 $coupon = new CouponsUsed();
                 $coupon->user_address_id = $useraddressid->id;
@@ -277,7 +296,7 @@ class ApiController extends Controller
                 $useraddressid->couponused()->save($coupon);
 
                 $cused = CouponsUsed::latest()->first();
-                $orderdetail->coupon_id = $cused->id;
+                $orderdetail->coupon_id = $cused->coupon_id;
             }
             $orderdetail->user_address_id = $useraddressid->id;
 
@@ -291,41 +310,44 @@ class ApiController extends Controller
                     $userorder->product_quantity = $cart['quantity'];
                     $useraddressid->userorder()->save($userorder);
                 }
-                Mail::to($req->email)->send(new OrderConfirmationMail($req->all()));
+                $data = ['fname' => $req->firstname,'lname' => $req->lastname,'email' => $req->email,'password' => $req->password,'address1'=>$req->address2,'address2'=>$req->address2,'pcode'=>$req->pcode,'mobile'=>$req->mobile,'cart_sub_total'=>$req->cart_sub_total,'shipping_cost'=>$shipping_cost,'total'=>$total];
+                $user['to'] = $req->email;
+
+                Mail::send('Mail.OrderConfirmationMail',$data,function($message) use ($user){
+                $message->to($user['to']);
+                $message->subject('Order Confirmation !');
+                });
+
+                $settings=Setting::first();
+                $admin="sakpalpurva1@gmail.com";
+                if($settings->order == 1){
+                    Mail::send('Mail.OrderConfirmationMail',$data,function($message) use ($admin){
+                        $message->to($admin);
+                        $message->subject('Order confirmed !');
+                    });
+                }
+                DB::commit();
                 return response()->json(['success' => "Order Placed Successfully", 'err' => 0]);
             }
-        } catch (\Illuminate\Database\QueryException $ex) {
-            return response()->json(['err' => 1, 'msg' => $ex->getMessage()]);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return response()->json(['err' => 1, 'msg' => 'Something went wrong']);
         }
     }
 
     public function MyOrders($id)
     {
         try {
-            $products = Product::with('images', 'assoc', 'prod_category')->get();
+            $products = Product::withTrashed('images', 'assoc', 'prod_category')->get();
             $useraddress = UserAddress::with('couponused', 'orderdetail', 'userorder')->where('user_id', $id)->get();
-            // $prodcart=[];
-            // foreach($products as $product){
-            //     foreach($useraddress->userorder as $userord){
-            //         if($userord->product_id == $product->id){
-            //             array_push($prodcart,$product);
-            //         }
-            //     }
-            // }
-            // $coupon = Coupon::all();
-            // foreach ($useraddress->couponused as $couponuse){
-            //     foreach ($coupon as $coup){
-            //     if($couponuse->coupon_id == $coup->id){
-            //         $usedcoupon=$coup;
-            //     }
-            // }
+            // foreach($useraddress->userorder->product_id as $product){
+            //     $products=Product::with('images', 'assoc', 'prod_category')->where('id',$product)->get();
             // }
             return response()->json(['useraddress' => $useraddress, 'products' => $products]);
-        } catch (\Illuminate\Database\QueryException $ex) {
-            return response()->json(['err' => 1, 'error' => $ex->getMessage()]);
+        } catch (\Exception $ex) {
+            return response()->json(['err' => 1, 'error' => 'Something went wrong']);
         }
     }
-
 
     public function Logout()
     {

@@ -34,7 +34,7 @@
                 </td>
                 <td class="cart_delete">
                   <button
-                    @click="deleteItem(item.product_id)"
+                    @click="deleteItem(item.id)"
                     class="cart_quantity_delete"
                   >
                     <i class="fa fa-times"></i>

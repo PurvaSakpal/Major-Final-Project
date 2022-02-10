@@ -25,6 +25,33 @@
             setTimeout(function() {
                 $('#successMessage').fadeOut('fast');
             }, 3000);
+            // $("#example1").DataTable({
+            //     "responsive": false, "lengthChange": false,
+            //     "buttons": [ "csv", "excel", "pdf"]
+            //     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example1').DataTable({
+                "bPaginate": false,
+                "bInfo": false,
+                "responsive": false,
+                "lengthChange": false,
+                "autoWidth": false,
+                dom: 'Blfrtip',
+                buttons: [{
+                        extend: 'csv',
+                        title: 'Users PDF',
+                        exportOptions: {
+                            columns: [0,1, 2, 3, 4]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'Users PDF',
+                        exportOptions: {
+                            columns: [0,1, 2, 3, 4]
+                        }
+                    }
+                ]
+            });
         })
     </script>
     <div class="container">
@@ -34,13 +61,13 @@
             </div>
             <div class="col-md-3">
                 <a href="/adduser" class="btn btn-warning float-right display-block" style="
-                    ">Add Users</a>
+                        ">Add Users</a>
             </div>
         </div>
         @if (Session::has('success'))
             <div class="alert alert-success" id="successMessage">{{ Session::get('success') }}</div>
         @endif
-        <table class="table table-striped" id="">
+        <table class="table table-striped" id="example1">
             <thead>
                 <tr>
                     <th>Sr No.</th>

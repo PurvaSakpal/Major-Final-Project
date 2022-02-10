@@ -150,7 +150,7 @@
               </form> -->
               <vue-mailchimp-email-signup-form
                 :element-id="'first-email-signup-form'"
-                :url="'https://XX.us4.list-manage.com/subscribe/post?u=XXXXXXXXXXXXXX&id=XXXXXXXXXX'"
+                :url="'https://gmail.us14.list-manage.com/subscribe/post?u=2d2adcf5ef4b1b0a4db7fb9c6&amp;id=e6b34a1e81'"
                 :title="'Subscribe to the Newsletter'"
                 :subtitle="'We take privacy seriously and we will never spam or sell your information.'"
               />

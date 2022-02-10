@@ -6,6 +6,29 @@
             setTimeout(function() {
                 $('#successMessage').fadeOut('fast');
             }, 3000);
+            $('#example1').DataTable({
+                "bPaginate": false,
+                "bInfo": false,
+                "responsive": false,
+                "lengthChange": false,
+                "autoWidth": false,
+                dom: 'Blfrtip',
+                buttons: [{
+                        extend: 'csv',
+                        title: 'Contact Details PDF',
+                        exportOptions: {
+                            columns: [0,1, 2, 3,4]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'Contact Details PDF',
+                        exportOptions: {
+                            columns: [0,1, 2, 3,4]
+                        }
+                    }
+                ]
+            });
         })
     </script>
     <div class="container">
@@ -14,7 +37,7 @@
             <div class="alert alert-success" id="successMessage">{{ Session::get('success') }}</div>
         @endif
 
-        <table class="table table-striped" id="mytable">
+        <table class="table table-striped" id="example1">
             <thead>
                 <tr>
                     <th scope="col">Sr No.</th>
@@ -36,7 +59,11 @@
                             <td>{{ $contact->subject }}</td>
                             <td>{{ $contact->message }}</td>
                             <td>
+                                @if ($contact->status==0)
                                 <a href="/contact/replycontact/{{$contact->id}}" class="btn btn-primary">Reply</a>
+                                @else
+                                <span class="text-primary">Replied</span>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

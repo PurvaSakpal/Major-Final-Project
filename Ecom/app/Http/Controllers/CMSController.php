@@ -34,11 +34,11 @@ class CMSController extends Controller
                 $dest = public_path("/CMSImage");
                 if ($file->move($dest, $fname)) {
                     $cmsimage->save();
-                    return back()->with('success', "Successfull!!");
+                    return redirect('/cms/cmsbannerimage')->with('success', "Successfull!!");
                 }
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -61,7 +61,7 @@ class CMSController extends Controller
             $banner->delete();
             return back()->with('success', 'Deleted Successfully');
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -94,10 +94,10 @@ class CMSController extends Controller
                 $address->fax = $req->fax;
                 $address->email = $req->email;
                 $address->save();
-                return redirect('cms/showaddress')->with('success', "Address Added successfully");
+                return redirect('/cms/cmsshowaddress')->with('success', "Address Added successfully");
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -115,7 +115,7 @@ class CMSController extends Controller
             CMSAddress::whereId($req->aid)->delete();
             return redirect('/cms/showaddress')->with('success', "Deleted Successfully");
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 }

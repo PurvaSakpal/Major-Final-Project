@@ -9,9 +9,9 @@
           <thead>
             <tr class="cart_menu">
               <td class="image">Sr.no</td>
-              <td class="name">Name</td>
-              <td class="price">Image</td>
-              <td class="quantity">Description</td>
+              <td class="name">Product</td>
+              <!-- <td class="price">Image</td> -->
+              <!-- <td class="quantity">Description</td> -->
               <td class="total">Quantity</td>
               <td class="total">Cart Sub Total</td>
               <td class="total">Coupon Applied</td>
@@ -20,18 +20,28 @@
             </tr>
           </thead>
           <tbody v-for="(useradd, i) in useraddress" :key="i">
+            <template v-for="userord in useradd.userorder">
             <tr
-              v-for="userord in useradd.userorder"
               :key="userord.index"
               class="mb-3"
             >
               <td>{{ i + 1 }}</td>
-              <td v-for="product in products" :key="product.index">
-                <span v-if="userord.product_id == product.id">
+              <td>
+                <template v-for="product in products">
+                <span v-if="userord.product_id == product.id" :key="product.index">
                   {{ product.name }}
+                  <img
+                    :src="url + product.images[0].image"
+                    alt=""
+                    width="100px"
+                    height="100px"
+                    class="mb-2"
+                  />
+                  {{ product.description }}
                 </span>
+                </template>
               </td>
-              <td v-for="product in products" :key="product.index">
+              <!-- <td v-for="product in products" :key="product.index">
                 <template v-if="userord.product_id == product.id">
                   <img
                     :src="url + product.images[0].image"
@@ -46,7 +56,7 @@
                 <template v-if="userord.product_id == product.id">
                   {{ product.description }}
                 </template>
-              </td>
+              </td> -->
               <td>
                 {{ userord.product_quantity }}
               </td>
@@ -57,6 +67,7 @@
               <td v-else>Not applied</td>
               <td>{{ useradd.orderdetail.total }}</td>
             </tr>
+            </template>
           </tbody>
         </table>
       </div>
@@ -94,6 +105,8 @@ export default {
         console.log($res.data.useraddress);
         console.log($res.data.products);
         this.useraddress = $res.data.useraddress;
+        this.orderdetails=$res.data.useraddress.orderdetail;
+        this.userorders=$res.data.useraddress.userorder;
         this.products = $res.data.products;
       })
       .catch((error) => {

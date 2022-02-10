@@ -10,9 +10,11 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\OrderDetailsController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SubCategoryController;
 use App\Models\SubCategory;
 use App\Http\Middleware\AdminMiddleware;
+use App\Models\Setting;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,11 +30,8 @@ use App\Http\Middleware\AdminMiddleware;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/404', function () {
-    return view('404');
-});
 
-Auth::routes();
+Auth::routes(['register' => false]);
 Route::get('loginstatus', function () {
     return "Not allowed to enter";
 });
@@ -54,7 +53,7 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/banner/showbanner', [BannerController::class, 'ShowBanner'])->name('show.banner');
     Route::get('/banner/editbanner/{id}', [BannerController::class, 'EditBanner'])->name('edit.banner');
     Route::post('/banner/posteditbanner', [BannerController::class, 'PostEditBanner'])->name('post.edit.banner');
-    Route::patch('/banner/deletebanner', [BannerController::class, 'DeleteBanner'])->name('delete.banner');
+    Route::post('/banner/deletebanner', [BannerController::class, 'DeleteBanner'])->name('delete.banner');
     //Banner Routes end
 
     //Category Routes start
@@ -98,16 +97,22 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
     //Add CMS Banner Image
     Route::get('/cms/addbannerimage', [CMSController::class, 'AddBannerImage']);
     Route::post('/cms/postaddbannerimage', [CMSController::class, 'PostAddBannerImage'])->name('post.add.bannerimage');
-    Route::get('/cms/showbannerimage', [CMSController::class, 'ShowBannerImage'])->name('show.banner.image');
+    Route::get('/cms/cmsbannerimage', [CMSController::class, 'ShowBannerImage'])->name('show.banner.image');
     Route::post('/cms/deletebannerimage', [CMSController::class, 'DeleteBannerImage'])->name('delete.banner.image');
 
     //Add CMS Address
     Route::get('/cms/addaddress', [CMSController::class, 'AddAddress'])->name('add.address');
     Route::post('/cms/addpostaddress', [CMSController::class, 'AddPostAddress'])->name('add.post.address');
-    Route::get('/cms/showaddress', [CMSController::class, 'ShowAddress'])->name('show.address');
+    Route::get('/cms/cmsshowaddress', [CMSController::class, 'ShowAddress'])->name('show.address');
     Route::post('/cms/deleteaddress', [CMSController::class, 'DeleteAddress'])->name('delete.address');
 
     //Show Order Details
     Route::get('/order/orderdetails', [OrderDetailsController::class, 'ShowOrderDetails'])->name('show.orderdetails');
     Route::get('/order/orderinfo/{id}', [OrderDetailsController::class, 'OrderInfo'])->name('order.info');
+    Route::post('/order/updatestaus',[OrderDetailsController::class,'updateStatus'])->name('update.status');
+    Route::get('/error',[UserController::class,'ErrorPage'])->name('error.page');
+
+    //Settings
+    Route::get('/settings/showsetting',[SettingsController::class,'ShowSettings'])->name('show.settings');
+    Route::post('/settings/updatesetting',[SettingsController::class,'UpdateSetting'])->name('update.setting');
 });

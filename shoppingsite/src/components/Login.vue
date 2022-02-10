@@ -203,7 +203,7 @@ export default {
               window.location.reload();
             }
             if (res.data.err == 1) {
-              console.log(res.data.msg);
+              console.log(res.data.err);
               // alert(res.data.msg);
               this.$swal(res.data.msg, "", "error");
             }
@@ -232,10 +232,11 @@ export default {
         userRegister(Data)
           .then((res) => {
             if (res.data.error == 0) {
-              this.$swal("User registered successfully", "", "success");
+              this.$swal(res.data.msg, "", "success");
               window.location.reload("/");
             }
             if (res.data.error == 1) {
+              this.load = false;
               this.$swal(res.data.msg, "", "error");
             }
           })

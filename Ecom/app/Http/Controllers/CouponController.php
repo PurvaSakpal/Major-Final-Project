@@ -43,7 +43,7 @@ class CouponController extends Controller
                 return redirect('/coupons/showcoupons')->with('success', 'Coupon added successfully');
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ class CouponController extends Controller
                 return redirect('/coupons/showcoupons')->with('success', 'Coupon updated successfully');
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ class CouponController extends Controller
             Coupon::find($req->cid)->delete();
             return back()->withSuccess('Coupon deleted successfully');
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 }

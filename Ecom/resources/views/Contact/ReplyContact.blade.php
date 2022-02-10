@@ -16,6 +16,7 @@
                         @endif
                         <form action="{{ route('send.reply') }}" method="post">
                             @csrf
+                            <input type="hidden" name="cid" value="{{$contactinfo->id}}">
                             <input type="hidden" name="name" value="{{ $contactinfo->name }}">
                             <div class="row mb-3">
                                 <label for="to" class="col-md-4 col-form-label text-md-end">To<span

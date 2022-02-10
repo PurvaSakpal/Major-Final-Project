@@ -28,7 +28,7 @@
             <tr>
                 <th>1</th>
                 <th>Customer Name</th>
-                <td>{{ $name }}</td>
+                <td>{{ $fname }} {{ $lname }}</td>
             </tr>
             <tr>
                 <th>2</th>
@@ -38,7 +38,7 @@
             <tr>
                 <th>3</th>
                 <th>Customer Address</th>
-                <td>{{ $address }}</td>
+                <td>{{ $address1 }} {{$address2}}</td>
             </tr>
             <tr>
                 <th>4</th>

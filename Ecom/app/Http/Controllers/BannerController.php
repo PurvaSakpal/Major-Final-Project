@@ -47,7 +47,7 @@ class BannerController extends Controller
                 }
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -94,7 +94,7 @@ class BannerController extends Controller
             }
             return redirect('/banner/showbanner')->with('success', "Banner updated successfully");
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -111,7 +111,7 @@ class BannerController extends Controller
             $banner->delete();
             return back()->with('success', "Deleted Successfully");
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 }

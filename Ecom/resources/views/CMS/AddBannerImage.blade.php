@@ -5,7 +5,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">{{ __('Add Banner Image') }}
-                        <a href="/cms/showbannerimage" class="btn btn-warning float-right">Show Banner Image</a>
+                        <a href="/cms/cmsbannerimage" class="btn btn-warning float-right">Show Banner Image</a>
 
                     </div>
                     <div class="card-body">

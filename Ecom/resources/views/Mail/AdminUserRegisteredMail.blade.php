@@ -6,7 +6,7 @@ Dear Admin,
 <table>
     <tr>
         <th>Name</th>
-        <td>{{ $name }}</td>
+        <td>{{ $fname }} {{$lname}}</td>
     </tr>
     <tr>
         <th>Email/Username</th>

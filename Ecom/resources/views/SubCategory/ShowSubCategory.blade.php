@@ -26,6 +26,29 @@
             setTimeout(function() {
                 $('#successMessage').fadeOut('fast');
             }, 3000);
+            $('#example1').DataTable({
+                "bPaginate": false,
+                "bInfo": false,
+                "responsive": false,
+                "lengthChange": false,
+                "autoWidth": false,
+                dom: 'Blfrtip',
+                buttons: [{
+                        extend: 'csv',
+                        title: 'SubCategory PDF',
+                        exportOptions: {
+                            columns: [0,1, 2, 3]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'SubCategory PDF',
+                        exportOptions: {
+                            columns: [0,1, 2, 3]
+                        }
+                    }
+                ]
+            });
         })
     </script>
     <div class="container">
@@ -49,7 +72,7 @@
                 {{ session('error') }}
             </div>
         @endif
-        <table class="table table-striped" id="mytable">
+        <table class="table table-striped" id="example1">
             <thead>
                 <tr>
                     <th scope="col">Sr No.</th>

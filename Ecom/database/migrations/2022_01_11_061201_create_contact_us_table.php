@@ -19,6 +19,7 @@ class CreateContactUsTable extends Migration
             $table->string('emai');
             $table->string('subject');
             $table->string('message');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

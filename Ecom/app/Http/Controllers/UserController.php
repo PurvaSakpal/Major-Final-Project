@@ -63,7 +63,7 @@ class UserController extends Controller
                 return redirect('/showuser')->with('success', "User created successfully");
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return back()->with('error', dd($ex->getMessage()));
+            return redirect('/error')->with('error', $ex->getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ class UserController extends Controller
             $validate = $req->validate([
                 'firstname' => ['required', 'string', 'max:255'],
                 'lastname' => ['required', 'string', 'max:255'],
-                'email'=>'required|email|unique:users,email,'.$req->email,
+                'email' => ['required', 'email','unique:users,email,' . $req->user_id],
                 'role_id' => ['required'],
                 'status' => ['required']
             ]);
@@ -96,7 +96,7 @@ class UserController extends Controller
                 return redirect('/showuser')->with('success', "User updated successfully");
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->errorInfo[2]);
             // Note any method of class PDOException can be called on $ex.
         }
     }
@@ -108,8 +108,12 @@ class UserController extends Controller
             User::whereId($req->uid)->delete();
             return back()->with('success', "User Deleted Successfully");
         } catch (\Illuminate\Database\QueryException $ex) {
-            return view('404');
+            return redirect('/error')->with('error', $ex->getMessage());
             // Note any method of class PDOException can be called on $ex.
         }
+    }
+
+    public function ErrorPage(){
+        return view('Error');
     }
 }
