@@ -24,6 +24,7 @@ use App\Models\CMSAddress;
 use App\Models\CMSHeader;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Constraint\Count;
 
 class ApiController extends Controller
 {
@@ -338,12 +339,15 @@ class ApiController extends Controller
     public function MyOrders($id)
     {
         try {
-            $products = Product::withTrashed('images', 'assoc', 'prod_category')->get();
-            $useraddress = UserAddress::with('couponused', 'orderdetail', 'userorder')->where('user_id', $id)->get();
-            // foreach($useraddress->userorder->product_id as $product){
-            //     $products=Product::with('images', 'assoc', 'prod_category')->where('id',$product)->get();
-            // }
-            return response()->json(['useraddress' => $useraddress, 'products' => $products]);
+            $user=UserAddress::where('user_id',$id)->with('orderdetail','userorder')
+            ->get();
+        //      $user=UserAddress::join('users','users.id','=','user_addresses.user_id')
+        // ->join('order_details','order_details.user_address_id','=','user_addresses.id')
+        // ->join('user_orders','user_orders.user_address_id','=','user_addresses.id')
+        // ->join('products','products.id','=','user_orders.product_id')
+        // ->get();
+        $products=Product::with('images')->get();
+            return response()->json(['order' => $user,'products'=>$products]);
         } catch (\Exception $ex) {
             return response()->json(['err' => 1, 'error' => 'Something went wrong']);
         }
